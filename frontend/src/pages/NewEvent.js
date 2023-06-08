@@ -2,10 +2,6 @@ import { json, redirect } from "react-router-dom";
 import EventForm from "../components/EventForm";
 
 function NewEventPage() {
-  function submitHandler(event) {
-    event.preventDefault();
-  }
-
   return <EventForm />;
 }
 
@@ -28,6 +24,10 @@ export async function action({ request, params }) {
     },
     body: JSON.stringify(eventData),
   });
+
+  if (response.status === 422) {
+    return response;
+  }
 
   if (!response.ok) {
     throw json({ method: "Could not save event." }, { status: 500 });
